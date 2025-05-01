@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文游编辑器</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .editor-container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      margin-top: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3399ff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #007acc;
+    }
+    .preview {
+      white-space: pre-wrap;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 20px;
+    }
+    .stat-block {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .stat-item {
+      flex: 1 1 40%;
+    }
+  </style>
+</head>
+<body>
+  <div class="editor-container">
+    <h2>文游编辑器</h2>
+
+    <label>角色名称：</label>
+    <input id="charName" placeholder="输入角色名" />
+
+    <label>对白文本：</label>
+    <textarea id="dialogue" rows="5" placeholder="在这里输入角色对白..."></textarea>
+
+    <label>添加数值项目：</label>
+    <div class="stat-block" id="statBlock">
+      <div class="stat-item">
+        <input type="text" placeholder="数值名称" />
+        <input type="number" placeholder="初始值" />
+      </div>
+    </div>
+    <button onclick="addStat()">添加一个数值</button>
+    <button onclick="randomizeStats()">随机生成数值</button>
+
+    <button onclick="preview()">预览效果</button>
+
+    <div class="preview" id="previewBox"></div>
+  </div>
+
+  <script>
+    function addStat() {
+      const block = document.getElementById("statBlock");
+      const div = document.createElement("div");
+      div.className = "stat-item";
+      div.innerHTML = `
+        <input type="text" placeholder="数值名称" />
+        <input type="number" placeholder="初始值" />
+      `;
+      block.appendChild(div);
+    }
+
+    function randomizeStats() {
+      const items = document.querySelectorAll(".stat-item");
+      items.forEach(item => {
+        const input = item.querySelectorAll("input")[1];
+        input.value = Math.floor(Math.random() * 100);
+      });
+    }
+
+    function preview() {
+      const name = document.getElementById("charName").value || "（未命名角色）";
+      const text = document.getElementById("dialogue").value || "（暂无对白）";
+      const stats = document.querySelectorAll(".stat-item");
+      let statText = "";
+      stats.forEach(item => {
+        const [label, val] = item.querySelectorAll("input");
+        if (label.value && val.value)
+          statText += `【${label.value}】：${val.value}\n`;
+      });
+      document.getElementById("previewBox").innerText = `角色：${name}\n\n${text}\n\n${statText}`;
+    }
+  </script>
+</body>
+</html>
